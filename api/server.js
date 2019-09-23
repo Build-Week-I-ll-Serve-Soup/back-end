@@ -1,18 +1,30 @@
 const express = require('express')
-const config = require('./middleware/config.js')
+const cors = require('cors')
+const helmet = require('helmet')
+
+const inventoryRouter = require('../config/routers/inventoryRouter.js')
+const userAccountsRouter = require('../config/routers/userAccountsRouter.js')
 
 const server = express()
-config(server)
 
-const { authenticate } = require('./middleware/authentication')
+function logger(req, res, next) {
+	const { path } = req
+	const timeStamp = Date.now()
+	const log = { path, timeStamp }
+	console.log(`${req.method} Request`, log)
+	next()
+}
 
-// const authRouter = require('./routes/authRoutes.js')
-// const inventoryRouter = require('./routes/inventoryRoutes.js')
+server.use(logger)
+server.use(helmet())
+server.use(cors())
+server.use(express.json())
+
 server.get('/', (req, res) => {
-	res.status(200).json({ message: 'Server is working.' })
+	res.status(200).send('Server alive')
 })
 
-// server.use('/auth', authRouter)
-// server.use('/users', authenticate, inventoryRouter)
+server.use('/api/inventory', inventoryRouter)
+server.use('/api/useraccounts', userAccountsRouter)
 
 module.exports = server

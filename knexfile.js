@@ -2,37 +2,44 @@ module.exports = {
 	development: {
 		client: 'sqlite3',
 		connection: {
-			filename: './database/soup-kitchen-db.sqlite3'
+			filename: './data/db.sqlite3'
 		},
 		useNullAsDefault: true,
 		migrations: {
-			directory: './database/migrations'
+			directory: './data/migrations',
+			tableName: 'dbmigrations'
 		},
-		seeds: {
-			directory: './database/seeds'
+		seeds: { directory: './data/seeds' }
+	},
+
+	staging: {
+		client: 'postgresql',
+		connection: {
+			database: 'db',
+			user: 'username',
+			password: 'password'
+		},
+		useNullAsDefault: true,
+		pool: {
+			min: 2,
+			max: 10
+		},
+		migrations: {
+			tableName: 'knex_migrations'
 		}
 	},
-	testing: {
-		client: 'sqlite3',
-		connection: {
-			filename: './database/soup-kitchen-db.sqlite3'
-		},
+
+	production: {
+		client: 'postgresql',
+		connection: { database: 'db', user: 'username', password: 'password' },
 		useNullAsDefault: true,
-		migrations: {
-			directory: './database/migrations'
+
+		pool: {
+			min: 2,
+			max: 10
 		},
-		seeds: {
-			directory: './database/seeds'
+		migrations: {
+			tableName: 'dbmigrations'
 		}
 	}
-	// production: {
-	//   client: 'sqlite3',
-	//   migrations: {
-	//     directory: './database/migrations'
-	//   },
-	//   seeds: {
-	//     directory: './database/seeds'
-	//   },
-	//   useNullAsDefault: true
-	// }
 }
