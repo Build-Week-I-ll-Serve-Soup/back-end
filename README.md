@@ -2,7 +2,7 @@
 <img src="serve_soup.png">
 </p>
 
-# I'll Serve Soup Backend
+# I'll Serve Soup Backend 🚩
 
 ## https://serve-soups.herokuapp.com/
 
