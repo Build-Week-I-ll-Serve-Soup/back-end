@@ -1,15 +1,16 @@
 exports.up = function(knex) {
-	return knex.schema
-		.createTable('categories', (tbl) => {
-			tbl.increments()
-			tbl
-				.string('cat_name', 128)
-				.notNullable()
-				.unique()
-		})
-		.createTable('units', (tbl) => {
-			tbl.increments()
-			tbl
+	return
+	knex.schema
+		// .createTable('categories', (tbl) => {
+		// 	tbl.increments()
+		// 	tbl
+		// 		.string('cat_name', 128)
+		// 		.notNullable()
+		// 		.unique()
+		// })
+		.createTable('units', (units) => {
+			units.increments()
+			units
 				.string('unit_name', 128)
 				.notNullable()
 				.unique()
@@ -93,5 +94,5 @@ exports.down = function(knex) {
 		.dropTableIfExists('users')
 		.dropTableIfExists('kitchens')
 		.dropTableIfExists('units')
-		.dropTableIfExists('categories')
+	// .dropTableIfExists('categories')
 }

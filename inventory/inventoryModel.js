@@ -12,7 +12,7 @@ module.exports = {
 async function findAll(user_id) {
 	console.log('USERID', user_id)
 	const items = await db('items as i')
-		.where({ 'i.user_id': user_id })
+		//.where({ 'i.user_id': user_id })
 		.join('categories as c', 'c.id', 'i.cat_id')
 		.join('units as u', 'u.id', 'i.unit_id')
 		.join('kitchens as k', 'k.id', 'i.kit_id')
