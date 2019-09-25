@@ -2,7 +2,7 @@
 <img src="serve_soup.png">
 </p>
 
-# I'll Serve Soup Backend 🚩
+# I'll Serve Soup Backend 🥣
 
 ## https://serve-soups.herokuapp.com/
 
@@ -83,13 +83,13 @@ Returns inventory list by user id as array of objects:
 ```
 [
   {
-    "item_name": "yellow popcorn",
+    "item_name": "cheese popcorn",
     "quantity": 10,
     "unit_name": "pounds",
     "cat_name": "meat&poultry"
   },
   {
-    "item_name": "black beans",
+    "item_name": "kidney beans",
     "quantity": 30,
     "unit_name": "cans",
     "cat_name": "canned&jarred"
