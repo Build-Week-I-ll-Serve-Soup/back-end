@@ -1,4 +1,6 @@
-![](serve_soup.png)
+<p align="center">
+<img src="serve_soup.png">
+</p>
 
 # I'll Serve Soup Backend
 
@@ -103,7 +105,7 @@ Returns full inventory in array of objects. Each object:
  [
   {
     "id": 1,
-    "item_name": "yellow popcorn",
+    "item_name": "cheese popcorn",
     "quantity": 10,
     "unit": "pounds",
     "price": 1000,
@@ -114,7 +116,7 @@ Returns full inventory in array of objects. Each object:
   },
   {
     "id": 2,
-    "item_name": "black beans",
+    "item_name": "kidney beans",
     "quantity": 30,
     "unit": "cans",
     "price": 1500,
@@ -132,7 +134,7 @@ Expects object:
 
 ```
 {
-	"item_name": "ghee",
+	"item_name": "seaweed",
 	"quantity" : "14",
 	"price": "445456",
 	"alert_when": "4",
@@ -148,7 +150,7 @@ Returns object:
 ```
 {
   "id": 13,
-  "item_name": "ghee",
+  "item_name": "seaweed",
   "quantity": 14,
   "unit_name": "cans",
   "price": 445456,
@@ -165,7 +167,7 @@ Returns single inventory item as object:
 ```
 {
   "id": 1,
-  "item_name": "yellow popcorn",
+  "item_name": "cheese popcorn",
   "quantity": 10,
   "unit_name": "pounds",
   "price": 1000,
@@ -186,7 +188,7 @@ Expects Object:
 
 ```
 {
-  "item_name": "yellow popcorn",
+  "item_name": "cheese popcorn",
   "quantity": 10,
   "unit_id": "1",
   "price": 1000,
@@ -206,7 +208,7 @@ Returns inventory list by kitchen. Returns an array of objects. Each Object:
 [
   {
     "id": 1,
-    "item_name": "yellow popcorn",
+    "item_name": "cheese popcorn",
     "quantity": 10,
     "unit_name": "pounds",
     "price": 1000,
@@ -216,7 +218,7 @@ Returns inventory list by kitchen. Returns an array of objects. Each Object:
   },
   {
     "id": 2,
-    "item_name": "black beans",
+    "item_name": "kidney beans",
     "quantity": 30,
     "unit_name": "cans",
     "price": 1500,
