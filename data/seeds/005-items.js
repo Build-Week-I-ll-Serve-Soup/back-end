@@ -6,6 +6,7 @@ exports.seed = function(knex) {
 			// Inserts seed entries
 			return knex('items').insert([
 				{
+					id: 1,
 					item_name: 'cheese popcorn',
 					quantity: 10,
 					unit_id: 3,
@@ -16,6 +17,7 @@ exports.seed = function(knex) {
 					user_id: 1
 				},
 				{
+					id: 2,
 					item_name: 'pinto beans',
 					quantity: 30,
 					unit_id: 4,
@@ -26,6 +28,7 @@ exports.seed = function(knex) {
 					user_id: 1
 				},
 				{
+					id: 3,
 					item_name: 'Frosted Flakes',
 					quantity: 15,
 					unit_id: 13,
@@ -36,6 +39,7 @@ exports.seed = function(knex) {
 					user_id: 1
 				},
 				{
+					id: 4,
 					item_name: 'Milk',
 					quantity: 40,
 					unit_id: 7,
@@ -46,6 +50,7 @@ exports.seed = function(knex) {
 					user_id: 1
 				},
 				{
+					id: 5,
 					item_name: 'creamer',
 					quantity: 10,
 					unit_id: 8,
@@ -56,6 +61,7 @@ exports.seed = function(knex) {
 					user_id: 1
 				},
 				{
+					id: 6,
 					item_name: 'rice',
 					quantity: 50,
 					unit_id: 1,
@@ -66,6 +72,7 @@ exports.seed = function(knex) {
 					user_id: 1
 				},
 				{
+					id: 7,
 					item_name: 'oranges',
 					quantity: 10,
 					unit_id: 1,
@@ -76,6 +83,7 @@ exports.seed = function(knex) {
 					user_id: 1
 				},
 				{
+					id: 8,
 					item_name: 'pancake mix',
 					quantity: 5,
 					unit_id: 3,
@@ -86,6 +94,7 @@ exports.seed = function(knex) {
 					user_id: 1
 				},
 				{
+					id: 9,
 					item_name: 'paprika',
 					quantity: 3,
 					unit_id: 11,
