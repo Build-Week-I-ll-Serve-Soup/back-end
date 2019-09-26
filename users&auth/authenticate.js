@@ -5,6 +5,7 @@ const secret = require('../data/secrets')
 module.exports = { authenticate }
 
 function authenticate(req, res, next) {
+	console.log("STYRING", req.body)
 	const token = req.headers.authorization
 	if (token) {
 		jwt.verify(token, secret.jwtSecret, (err, decoded) => {

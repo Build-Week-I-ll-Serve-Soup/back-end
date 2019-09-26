@@ -1,8 +1,8 @@
 const express = require('express')
+
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const { authenticate } = require('../users&auth/authenticate')
-
 const Inv = require('./inventoryModel')
 
 const router = express.Router()
@@ -23,9 +23,11 @@ router.get('/', authenticate, async (req, res) => {
 	}
 })
 
-router.post('/', authenticate, async (req, res) => {
+router.post('/post', authenticate, async (req, res) => {
 	const item = req.body
+	// item = { user_Id: 3, kit_Id: 2, item_name: "Pepsi", quantity: 20, price: 199, cat_id: 2, unit_id: 4 }
 	const userId = req.decoded.subject
+	console.log("LLL", req.body)
 	const kitId = req.decoded.kitchen
 	try {
 		const added = await Inv.add(userId, kitId, item)
@@ -58,6 +60,7 @@ router.get('/:id', authenticate, async (req, res) => {
 
 router.put('/:id', authenticate, async (req, res) => {
 	const item = req.body
+	// console.log("PPPP", item)
 	const userId = req.decoded.subject
 	const kitId = req.decoded.kitchen
 	try {

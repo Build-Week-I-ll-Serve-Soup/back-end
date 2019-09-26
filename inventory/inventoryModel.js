@@ -91,9 +91,7 @@ async function add(userId, kitId, item) {
 		const added = await db('items').insert(newItem)
 		if (added) {
 			return true
-		} else {
-			return null
-		}
+		} 
 	} catch (err) {
 		console.log(err)
 		return null
