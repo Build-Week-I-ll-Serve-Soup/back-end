@@ -1,6 +1,7 @@
 const express = require('express')
 const helmet = require('helmet')
 const cors = require('cors')
+const bodyParser = require('body-parser')
 
 const UserRouter = require('../users&auth/usersRouter')
 const AuthRouter = require('../users&auth/authRouter')
@@ -10,9 +11,10 @@ const UnitRouter = require('../units/unitsRouter')
 
 const server = express()
 
-server.use(express.json())
+
 server.use(helmet())
 server.use(cors())
+server.use(express.json())
 
 server.use('/api/users', UserRouter)
 server.use('/api/auth', AuthRouter)
