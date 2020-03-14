@@ -1,390 +1,766 @@
-# I'll Serve Soup 2
+# <p align="center" style="color: green" size="40"> I'll Serve Soup Backend</p>
 
-## Server and Database
+<p align="center">
+  <img src="soup.png" width="190" alt="I'll serve soup">
+</p>
 
-### To start the server if running locally:
+# About
 
-First, install all dependencies using yarn or npm before moving on. I recommend npm because yarn couldn't find _bcryptjs_ when I was setting this up.
+This is the back-end for the I'll serve soup, which is part of Lambda School Build Week Project.
 
-Run _**npm run start**_ OR _**yarn start**_ to start.
-By default the server runs on port 5000 if it is not found at https://ill-serve-soup2-db.herokuapp.com/
+# Instructions
 
-## Table of Contents
+All API requests are made to: **_ https://kitchen-soup-backend.herokuapp.com _**
 
-**Database Tables**
-[Inventory](#Inventory) |
-[Users](#Users) |
-[Locations](#Locations) |
+This api is using **https://sendgrid.com/** for sending emails.
 
-**CRUD Endpoints**
-[Inventory](#inventory-1) |
-[Users](#users-1) |
-[User Accounts](#user-accounts) |
-[Locations](#locations-1) |
-[Volunteers](#volunteers) |
+If a Item amount is 0 the API will automatically send a messege to supplier with a messege
 
-NOTE: Do not include the id number in any PUT or POST requests. The system autogenerates it.
-
-NOTE #2: You must put quotation marks around the key names in your objects, otherwise you will receive an error.
-
-`{ "username" : "abc123" }`, not `{ username : "abc123" }`
-
----
-
-# **Database Schema**
-
-## Tables
-
-Column names are _italicized_ and **bolded**
-
-### Inventory
-
-Used for managing total inventory and individual items. Able to Add items, remove items, update items AND get a list of the total inventory
-
--   Has an auto-incrementing unique **_id_** number (you don't need to add this)
-
--   An item **_name_** is required and must be unique, with a max length of 255 characters
-
--   A **_quantity_** is optional. If you don't add a quantity, it will default to 0.
-
--   The **_units_** are also optional. This would be useful for entering units of measure for ingredients. Can be anything and is made to be flexible for a soup kitchen that probably does not track the inventory down to the ounce. (example: "lbs" or "bags" for dry goods, "cans" for canned goods)
-
-_example:_
-
-| id  | name         | quantity | units |
-| --- | ------------ | -------- | ----- |
-| 1   | Chicken Soup | 25       | cans  |
-
----
-
-### Users
-
-Used to manage list of users and individual users
-
--   Has an autoincrementing, unique **_id_** number (you don't need to add this)
-
--   A user **_username_** is required and must be unique, max length 255 characters
-
--   A user **_password_** is required, max length 255 characters.
-
--   A user **_name_** , max length 255 characters
-
--   A user **_role_** is required, max length 128 characters (Though this will depend on whoever creates the registration form, here are some examples: "admin", "cook", "assistant", "manager", "volunteer", etc. )
-
--   A user **_email_** , max length 255 characters
-
--   A user **_phone_** , max length 128 characters
-
-_example:_
-
-| id  | username | password   | name      | role      | email              | phone        |
-| --- | -------- | ---------- | --------- | --------- | ------------------ | ------------ |
-| 3   | jsmith99 | _password_ | Joe Smith | volunteer | jsmith99@email.com | 123-456-7890 |
-
----
-
-### Locations
-
-Used to manage list of locations and individual locations
-
--   Has an autoincrementing, unique ID number
-
--   A **_name_** is required and must be unique, max length 255 characters
-
--   A **_streetAddress_**, max length 255 characters
-
--   A **_city_** , max length 255 characters
-
--   A **_state_**, max length 128 characters
-
--   An **_email_** , max length 255 characters
-
--   A **_phone_** , max length 128 characters
-
--   **_volunteersNeeded_**, a boolean that defaults to 0 (false).
-
-_example:_
-
-| id  | name     | streetAddress | city      | state  | zipCode | email                 | phone        | volunteersNeeded |
-| --- | -------- | ------------- | --------- | ------ | ------- | --------------------- | ------------ | ---------------- |
-| 3   | Downtown | 123 Main St   | Townville | Oregon | 12345   | soupkitchen@email.com | 123-456-7890 | 0                |
-
----
-
-[^Back to Top^](#ill-serve-soup-2)
-
-# **Endpoints**
-
-## Inventory
-
-### /api/inventory
-
-#### GET
-
-Returns a JSON object with the entire inventory. User must be logged in to access.
-
-Success: Returns a status of 200 and a JSON object with the inventory
-
-#### POST
-
-The request body must include a unique name, and can optionally include quantity and units. User must be logged in to access.
-
-```javascript
-{
-	name:  "Tuna - Salad Premix", //required
-	quantity:  89,
-	units:  "ounces",
-},
+```
+  to: 'supplier@example.com',
+  from: 'currentUser@example.com',
+  subject: 'Bananas out of stock',
+  text: 'Need more Bananas!!',
 ```
 
-Success: Returns a status of 201 and a JSON object with a success message and the id number of the new item.
+## REGISTER (POST) User
+
+a **POST** request to _/api/users/register_ will create a new user and return an object
+
+`email must be in the form: anystring@anystring.anystring`
+
+if not server will respond with :
+
+```
+{
+    "message": "Please provide correct email for the user. Ex: anystring@anystring.anystring"
+}
+```
+
+Form will need `name` , `password` , `email` and `role` that are require for registration a user
+URL: /api/users/register
+
+Example data:
+
+```
+{
+    "name":"Sorin",
+    "password":"123",
+    "email":"sorin@yahoo.com",
+    "role":"manager"
+}
+
+```
+
+If posted succesfully, will return a object with message:
+
+```
+
+{
+    "id": 5,
+    "email": "sorin@yahoo.com",
+    "message": "User: Sorin was registered succesfully"
+}
+
+```
+
+If require field are not preset it will return a object with message:
+
+```
+
+{
+    "message": "please provide name, password email and role for the user"
+}
+
+```
+
+## LOGIN (POST) User
+
+a **POST** request to \_/api/users/login will return an object
+
+URL: /api/users/login
+
+Form will need `username` and `password`. If posted correctly, should get a response of:
+
+```
+
+{
+    "message": "Welcome Sorin!",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWJqZWN0Ijo1LCJyb2xlIjoiYWRtaW4iLCJlbWFpbCI6InNvcmluQHlhaG9vLmNvbSIsImlhdCI6MTU1NTE5MTE4NiwiZXhwIjoxNTU1MjYzMTg2fQ.bmynQf4cFPjY3xRbf1aL5zdi90Fk7Kq51lcFX5smPQg",
+    "role": "manager",
+    "id": 5
+}
+
+```
+
+If require field are not preset it will return a object with message:
+
+```
+
+{
+"message": "please provide username and password"
+}
+
+```
 
 ---
 
-### /api/inventory/_{id}_
+## GET ALL Users
 
-#### GET
+a **GET** request to \_/api/users will return all the users existing in database
 
-Returns a JSON object with the corresponding item. User must be logged in to access.
+URL: /api/users/
 
-Success: Returns a status of 200 and a JSON object containing the item.
+This route is restricted - a authorization header with the token its required
+The respone will include the decoded tokend contains the id,email and role of the current user
 
-#### PUT
+If Successful, response should be 200 (OK). If unsuccessful, response should be 500. Example users data:
 
-The request body must include information to be updated. User must be logged in to access.
+```
+{
+    "users": [
+        {
+            "id": 1,
+            "name": "Mihai",
+            "email": "mihsi@yahoo.com",
+            "password": "123",
+            "role": "manager"
+        },
+        {
+            "id": 2,
+            "name": "Ion",
+            "email": "ion@yahoo.com",
+            "password": "123",
+            "role": "volunteer"
+        },
+        {
+            "id": 3,
+            "name": "Maria",
+            "email": "maria@yahoo.com",
+            "password": "123",
+            "role": "manager"
+        },
+    ],
+    "decoded": {
+        "subject": 7,
+        "role": "manager",
+        "email": "cata@yahoo.com",
+        "iat": 1555192150,
+        "exp": 1555264150
+    }
+}
+```
 
-Success: Returns a status of 201 and a JSON object with a success message and the count of updated items.
+In case the token is not present in the header it will respond with:
 
-#### DELETE
+```
 
-Permanently removes the item from the inventory. A confirmation dialog may be a good idea here. User must be logged in to access.
+{
+"message": "Invalid Credentials"
+}
 
-Success: Returns a status of 200 and a JSON object with a success message with the count of deleted items.
+```
 
----
+## GET Users By ID
 
-[^Back to Top^](#ill-serve-soup-2)
+a **GET** request to \_/api/users will return the user with specified ID
 
-## Users
+URL: /api/users/:id
 
-### /api/users
+This route is restricted - a authorization header with the token its required
 
-#### GET
+If Successful, response should be 200 (OK), should get a response of:
 
-Returns a JSON object with the entire users list. User must be logged in to access this.
-
-REACT DEV >> _You need to have a way to retrieve the token that is generated._
-
-Success: Returns a status of 200 and a JSON object containing all of the users.
-
----
-
-### /api/users/_{id}_
-
-#### GET
-
-Returns a JSON object with the corresponding user. User must be logged in to access.
-
-```javascript
+```
 {
     "id": 4,
-    "username": "joller3",
-    "name": "Jerrie Oller",
-    "role": "cook",
-    "email": "joller3@ebay.co.uk",
-    "phone": "529-300-3099"
+    "name": "Mia",
+    "email": "mia@yahoo.com",
+    "role": "admin"
 }
 ```
 
-Success: Returns a status of 200 and a JSON object containing the requested user.
+If id does't exist in database will response with 404 and a message:
 
-#### PUT
+```
 
-The request body must include information to be updated. User must be logged in to access.
-
-Success: Returns a status of 201 and a JSON object with a success message with the count of updated items.
-
-#### DELETE
-
-Permanently removes the corresponding user from the database. A confirmation dialog may be a good idea here. User must be logged in to access.
-
-Success: Returns a status of 200 and a JSON object with a success message with the count of deleted items.
-
----
-
-[^Back to Top^](#ill-serve-soup-2)
-
-## User Accounts
-
-### /api/useraccounts/register
-
-#### POST
-
-The request body must include a unique username and a password. It can optionally include a name, role, email, and phone number. Returns a success message and the id number of the new user.
-
-```javascript
 {
-	username:  "jdacthj", //unique, required
-	password:  "hvTsxvWsRRl", //required
-	name:  "Jaquenette D'Acth",
-	role:  "volunteer",
-	email:  "jdacthj@ihg.com",
-	phone:  "710-804-5935",
+    "message": "Id not found"
+}
+
+```
+
+If unsuccessful, response should be 500
+
+In case the token is not present in the header it will respond with:
+
+```
+
+{
+    "message": "Invalid Credentials"
+}
+
+```
+
+## EDIT (PUT) User
+
+URL: /api/users/:id
+
+Nothing required, can change as few or as many things as wanted.
+
+Example: Changing user 's `username` from Alex to Alexandru, and `email` from alex@yahho.com to newEmail@yahoo.com
+
+```
+{
+    "name": "Alexadru",
+    "email": "newEmail@yahoo.com
 }
 ```
 
-Success: Returns a status of 201 and a JSON object with a success message and the id number of the new user.
+A successful post will return the updated user ID and a message. For example, the above edit will return:
 
----
-
-### /api/useraccounts/login
-
-#### POST
-
-The request body must include a unique username and a password matching what is on the database. Returns a success message and a token which is required to pass to be able access restricted routes.
-
-```javascript
+```
 {
-	username:  "jdacthj", // required
-	password:  "hvTsxvWsRRl", //required
+    "updateID": "2",
+    "message": "User: Alexandru Update succesfully"
 }
 ```
 
-REACT DEV >> _You need to have a way to store the token that is generated. LocalStorage(setItem) is a simple way_
+If user with specified ID does't exist in database will response with 404 and a message:
 
-Success: Returns a status of 201 and a JSON object with a success message and the token.
-
----
-
-[^Back to Top^](#ill-serve-soup-2)
-
-## Locations
-
-### /api/locations
-
-#### GET
-
-Returns a JSON object with the entire locations list. User must be logged in to access.
-
-Success: Returns a status of 200 and a JSON object containing all of the locations.
-
-#### POST
-
-The request body must include a unique name, and can optionally include a streetAddress, a city, state, zipCode, email, and phone. User must be logged in to access.
-
-```javascript
+```
 {
-	name:  "Independence", // unique, required
-	streetAddress:  "20 Saint Paul Park",
-	city:  "Bronx",
-	state:  "New York",
-	zipCode:  12345,
-	email:  bronxsoupkitchen@email.com,
-	phone:  "718-395-9875",
-	volunteersNeeded: 0,
-},
+    "message": "User not found"
+}
+
 ```
 
-Success: Returns a status of 201 and a JSON object with a success message and the id number of the new location.
+If unsuccessful, response should be 500 and a message:
 
----
-
-### /api/locations/_{id}_
-
-#### GET
-
-Returns a JSON object with the corresponding location. User must be logged in to access.
-
-```javascript
-{
-	id:  6,
-	name:  "Northview",
-	streetAddress:  "7172 Northridge Crossing",
-	city:  "Plano",
-	state:  "Texas",
-	zipCode:  "75074",
-	email:  "estockings5@odnoklassniki.ru",
-	phone:  "972-650-6963",
-	volunteersNeeded: 0,
-},
 ```
-
-Success: Returns a status of 200 and a JSON object with the requested location.
-
-#### PUT
-
-The request body must include information to be updated. User must be logged in to access.
-
-Success: Returns a status of 201 and a JSON object with a success with the count of updated records.
-
-#### DELETE
-
-Permanently removes the corresponding location from the database. A confirmation dialog may be a good idea here. User must be logged in to access.
-
-Success: Returns a status of 200 and a JSON object with a success message and the count of the deleted records.
-
----
-
-[^Back to Top^](#ill-serve-soup-2)
-
-## Volunteers
-
-### /api/volunteers/register
-
-#### POST
-
-The request body must include a unique username and a password. It can optionally include a name, email, and phone number. NOTE: The role 'volunteer' is set for anyone registering here. Returns a success message and the id number of the new user.
-
-```javascript
 {
-	username:  "jdacthj", //unique, required
-	password:  "hvTsxvWsRRl", //required
-	name:  "Jaquenette D'Acth",
-	email:  "jdacthj@ihg.com",
-	phone:  "710-804-5935",
+    "error": "error trying to update user"
 }
 ```
 
-Success: Returns a status of 201 and a JSON object with a success message and the id number of the new user.
+## DELETE User
 
----
+URL: /api/users/:id
 
-### /api/volunteers/login
+Nothing required, can change as few or as many things as wanted.
 
-#### POST
+A successful delete will return a object with a message, for example deleting a user succesfully will return:
 
-The request body must include a unique username and a password matching what is on the database. Returns a success message and a token which is required to pass to be able access restricted routes.
-
-```javascript
+```
 {
-	username:  "jdacthj", // required
-	password:  "hvTsxvWsRRl", //required
+    "message": "Delete Succesfully"
 }
 ```
 
-REACT DEV >> _You need to have a way to store the token that is generated. LocalStorage(setItem) is a simple way_
+If user with specified ID does't exist in database will response with 404 and a message:
 
-Success: Returns a status of 201 and a JSON object with a success message and the token.
+```
+{
+    "message": "User not found"
+}
+```
 
 ---
 
-### /api/volunteers/locations
+## GET all Items/Inventory from database
 
-#### GET
+URL: /api/users/items
 
-Returns a JSON object with the list of locations that need volunteers. User must be logged in to access.
+The respone will include the decoded tokend contains the id,email and role of the current user
+This route is restricted - a authorization header with the token its required
 
-Success: Returns a status of 200 and a JSON object containing all of the locations.
+Example Data for /api/items:
 
 ```
-                .-~~~~~~~~~-._       _.-~~~~~~~~~-.
-            __.'              ~.   .~              `.__
-          .'//        END       \./      OF   THE    \\`.
-        .'//                     |           README    \\`.
-      .'// .-~"""""""~~~~-._     |     _,-~~~~"""""""~-. \\`.
-    .'//.-"                 `-.  |  .-'                 "-.\\`.
-  .'//______.============-..   \ | /   ..-============.______\\`.
-.'______________________________\|/______________________________`.
+
+{
+    "items": [
+        {
+            "id": 1,
+            "name": "Stone fruit",
+            "amount": 12,
+            "unit": "lbs",
+            "price": 6.3,
+            "supplier_name": "Est products",
+            "supplier_contact": "est@yahoo.com",
+            "image": "https://i.imgur.com/SCAVfIV.jpg",
+            "categoryID": 2
+        },
+        {
+            "id": 2,
+            "name": "carrots",
+            "amount": 15,
+            "unit": "lbs",
+            "price": 2.3,
+            "supplier_name": "Nord products",
+            "supplier_contact": "nord@yahoo.com",
+            "image": "https://i.imgur.com/NdX1vFQ.jpg",
+            "categoryID": 1
+        },
+        {
+            "id": 3,
+            "name": "cereal",
+            "amount": 3,
+            "unit": "gal",
+            "price": 13.2,
+            "supplier_name": "First products",
+            "supplier_contact": "first@yahoo.com",
+            "image": "https://i.imgur.com/dGWUJEj.jpg",
+            "categoryID": 4
+        }
+    ],
+    "decodedToken": {
+        "subject": 4,
+        "role": "manager",
+        "email": "test@yahoo.com",
+        "iat": 1555417996,
+        "exp": 1555489996
+    }
+}
 ```
 
-[^Back to Top^](#ill-serve-soup-2)
+## GET Items by Id from database
+
+URL: /api/items/:id
+
+The respone will include the decoded tokend contains the id,email and role of the current user
+This route is restricted - a authorization header with the token its required
+
+Example Data for /api/users/items/2:
+
+```
+{
+    "item": {
+        "id": 2,
+        "name": "carrots",
+        "amount": 15,
+        "unit": "lbs",
+        "price": 2.3,
+        "supplier_name": "Nord products",
+        "supplier_contact": "nord@yahoo.com",
+        "image": "https://i.imgur.com/NdX1vFQ.jpg",
+        "categoryID": 1
+    },
+    "decodedToken": {
+        "subject": 4,
+        "role": "manager",
+        "email": "test@yahoo.com",
+        "iat": 1555417996,
+        "exp": 1555489996
+    }
+}
+```
+
+## POST Items
+
+URL: /api/items
+
+This route is restricted - a authorization header with the token its required
+
+The API does not _require_ every section to be provided. Require fields: name and amout.
+
+```
+
+{
+    "name":"Magic",
+    "amount":"12 lbs"
+}
+
+```
+
+A successfully created item will return a object with the posted item:
+
+```
+{
+    "id": 8,
+    "name": "Magidc",
+    "amount": "12 ldbs",
+    "unit": "kg",
+    "price": null,
+    "supplier_name": null,
+    "supplier_contact": null,
+    "image": "slsls",
+    "categoryID": 2
+}
+```
+
+## EDIT (PUT) Items
+
+URL: /api/items/:id
+
+This route is restricted - a authorization header with the token its required
+
+The API does not _require_ every section to be provided. Front End architects may choose what is required on their descretion. Here is what a an edit with only the name changed will look like for user 2. Name, amount and category is being changed:
+
+```
+
+{
+    "name": "pattato",
+    "amount": 25,
+    "unit": "lbs",
+    "categoryID": 3
+}
+
+```
+
+If succesfully the messege will be returned:
+
+```
+
+{
+    "message": "Item pattato was succesfully edited"
+}
+
+```
+
+## DELETE (DELETE) Items
+
+URL: /api/items/:id
+
+A successful delete will return a message:
+
+```
+{
+    "message": "Item succesfully deleted"
+}
+```
+
+---
+
+## GET all Categoris from database
+
+URL: /api/categories
+
+The respone will include the decoded tokend contains the id,email and role of the current user
+This route is restricted - a authorization header with the token its required
+
+Example Data for /api/categories:
+
+```
+{
+    "categories": [
+        {
+            "id": 1,
+            "name": "chicken"
+        },
+        {
+            "id": 2,
+            "name": "fruits"
+        },
+        {
+            "id": 3,
+            "name": "herbal"
+        },
+        {
+            "id": 4,
+            "name": "proteins"
+        },
+        {
+            "id": 5,
+            "name": "cream"
+        },
+        {
+            "id": 6,
+            "name": "instant"
+        },
+        {
+            "id": 7,
+            "name": "noodle"
+        },
+        {
+            "id": 8,
+            "name": "fish"
+        },
+        {
+            "id": 9,
+            "name": "bread"
+        },
+        {
+            "id": 10,
+            "name": "Bisque"
+        }
+    ],
+    "decodedToken": {
+        "subject": 4,
+        "role": "manager",
+        "email": "test@yahoo.com",
+        "iat": 1555417996,
+        "exp": 1555489996
+    }
+}
+```
+
+If name field are not preset it will return a object with message:
+
+```
+{
+    "error": "please provide a name for the category"
+}
+
+```
+
+## EDIT (PUT) Categories
+
+URL: /api/categories/:id
+
+Nothing required, can change as few or as many things as wanted.
+
+Example: Changing category 's `name` from fish to bird
+
+```
+
+{
+    "name": "bird",
+}
+
+```
+
+A successful post will return the updated user ID and a message. For example, the above edit will return:
+
+```
+
+{
+    "message": "Category: bird was update succesfully"
+}
+
+```
+
+If category with specified ID does't exist in database will response with 404 and a message:
+
+```
+
+{
+    "message": "Category not found"
+}
+
+```
+
+If unsuccessful, response should be 500 and a message:
+
+```
+
+{
+    error: "error trying to edit category"
+}
+
+```
+
+## DELETE Category
+
+URL: /api/categories/:id
+
+Nothing required, can change as few or as many things as wanted.
+
+A successful delete will return a object with a message, for example deleting a category succesfully will return:
+
+```
+
+{
+    "message": "Category succesfully deleted"
+}
+
+```
+
+If Category with specified ID does't exist in database will response with 404 and a message:
+
+```
+
+{
+    "message": "Category id not found"
+}
+
+```
+
+---
+
+## GET all Kitchens Soup Restaurants from database
+
+URL: /api/kitchens
+
+Nothing required, anybody can access this endpoint
+
+Example Data for /api/kitchens:
+
+```
+[
+    {
+        "id": 1,
+        "name": "The Soup Kitchen",
+        "location": "123 Smith Street, Brunswick, VIC, 3056",
+        "mission": "Established in 1983, The Soup Kitchen Inc. is a 501 (c)(3) non-profit organization whose goal is to help the less fortunate members of our community.  This includes the elderly, unemployed, underemployed, poor, migrants and homeless – women, men and children",
+        "average_visitors": 2.4,
+        "website": "www.thesoupkitchen.com"
+    },
+    {
+        "id": 2,
+        "name": "The Soup Compasion",
+        "location": "Via Garibaldi 123, 00100 Roma\t",
+        "mission": "All of the Compassion Soup Kitchen’s mahi is guided by our vision, mission and values. We strive to ensure our service best fits the needs of people in our community, and honour our mission. We evaluate new and existing services against our vision and mission, and use our values to carry out this work",
+        "average_visitors": 6.4,
+        "website": "www.thesoupcompasion.com"
+    },
+    {
+        "id": 3,
+        "name": "Treton Soup Kitchen",
+        "location": "Javorová 33/A, 123 45 Bratislava 2\t",
+        "mission": "With a strong infrastructure managed by a committed and engaged Board and staff, TASK will expand its ability to reach the hungry in the Trenton area and those with the aspiration or responsibility to serve them.",
+        "average_visitors": 8.6,
+        "website": "www.tretonkitchen.com"
+    }
+]
+
+```
+
+If unsuccessful, response should be 500 and a message:
+
+```
+
+{
+    error: "error trying to get all kitchens from database"
+}
+
+```
+
+## GET Kitchen Soup by Id from database
+
+URL: /api/kitchens/:id
+
+Nothing required, anybody can access this endpoint
+
+Example Data for /api/kitchens/:id
+
+```
+
+{
+    "kitchen": {
+        "id": 2,
+        "name": "The Soup Compasion",
+        "location": "Via Garibaldi 123, 00100 Roma\t",
+        "mission": "All of the Compassion Soup Kitchen’s mahi is guided by our vision, mission and values. We strive to ensure our service best fits the needs of people in our community, and honour our mission. We evaluate new and existing services against our vision and mission, and use our values to carry out this work",
+        "average_visitors": 6.4,
+        "website": "www.thesoupcompasion.com"
+    }
+}
+
+```
+
+If Kitchen with specified ID does't exist in database will response with 404 and a message:
+
+```
+
+{
+    "message": "Id not found"
+}
+
+```
+
+## POST a Kitchen Soup to database
+
+URL: /api/kitchens
+
+Nothing required, anybody can access this endpoint
+
+The API _require_ require fields: name , location and mission
+
+```
+
+{
+    "name":"Best Soup Kitchden",
+    "location":"445 Mount Edden Road, Mount Eden, Auckland",
+    "mission":" Mission Possdible is about the best practices that have changed peoples’ lives for the better through a soup kitchen. Here’s the model. Make a difference!"
+}
+
+```
+
+A successfully created item will return a object with the posted item:
+
+```
+
+{
+    "id": 5,
+    "name": "Best Soup Kitchden",
+    "location": "445 Mount Edden Road, Mount Eden, Auckland",
+    "mission": " Mission Possdible is about the best practices that have changed peoples’ lives for the better through a soup kitchen. Here’s the model. Make a difference!",
+    "average_visitors": null,
+    "website": null
+}
+
+```
+
+## EDIT (PUT) Kitchens
+
+URL: /api/kitchens/:id
+
+Nothing required, can change as few or as many things as wanted.
+
+Example: Changing category 's `name` and `mission` from fish to bird
+
+```
+
+{
+    "name":"new name",
+    "mission":"new mission"
+}
+
+```
+
+A successful post will return the updated kitchen name with a message. For example, the above edit will return:
+
+```
+
+{
+    "message": "new name was succesfully edited"
+}
+
+```
+
+If kitchen with specified ID does't exist in database will response with 404 and a message:
+
+```
+
+{
+    message: "Kitchen not found"
+}
+
+```
+
+If unsuccessful, response should be 500 and a message:
+
+```
+
+{
+    "error trying to edit the kitchen"
+}
+
+```
+
+## DELETE Kitcken by ID
+
+URL: /api/categories/:id
+
+Nothing required, can change as few or as many things as wanted.
+
+A successful delete will return a object with a message, for example deleting a kitchen succesfully will return:
+
+```
+
+{
+    "message": "Kitchen succesfully deleted"
+}
+
+```
+
+If Category with specified ID does't exist in database will response with 404 and a message:
+
+```
+
+{
+    "message": "Kitchen not found"
+}
+
+```

@@ -1,27 +1,25 @@
 const express = require("express");
-const cors = require("cors");
 const helmet = require("helmet");
+const cors = require("cors");
 
-const inventoryRouter = require("../config/routers/inventoryRouter.js");
-const usersRouter = require("../config/routers/usersRouter.js");
-const locationsRouter = require("../config/routers/locationsRouter.js");
-const userAccountsRouter = require("../config/routers/userAccountsRouter.js");
-const volunteersRouter = require("../config/routers/volunteersRouter.js");
+//routes import - nothing for now
+const userRoutes = require("../routes/user-routes");
+const itemRoutes = require("../routes/item-routes");
+const categoryRoutes = require("../routes/category-routes");
+const kitchenRoutes = require("../routes/kitchen-routes");
+const stripeRoutes = require("../routes/stripe-routes");
 
 const server = express();
 
-server.use(helmet());
 server.use(cors());
+server.use(helmet());
 server.use(express.json());
 
-server.get("/", (req, res) => {
-	res.status(200).send("Server alive");
-});
-
-server.use("/api/inventory", inventoryRouter);
-server.use("/api/users", usersRouter);
-server.use("/api/locations", locationsRouter);
-server.use("/api/useraccounts", userAccountsRouter);
-server.use("/api/volunteers", volunteersRouter);
+//server.use(routes)
+server.use(userRoutes);
+server.use(itemRoutes);
+server.use(categoryRoutes);
+server.use(kitchenRoutes);
+server.use(stripeRoutes);
 
 module.exports = server;
