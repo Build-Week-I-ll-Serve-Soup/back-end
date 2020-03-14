@@ -1,29 +1,27 @@
-const express = require('express')
-const helmet = require('helmet')
-const cors = require('cors')
-const bodyParser = require('body-parser')
+const express = require("express");
+const cors = require("cors");
+const helmet = require("helmet");
 
-const UserRouter = require('../users&auth/usersRouter')
-const AuthRouter = require('../users&auth/authRouter')
-const InvRouter = require('../inventory/inventoryRouter')
-const KitRouter = require('../kitchens/kitchensRouter')
-const UnitRouter = require('../units/unitsRouter')
+const inventoryRouter = require("../config/routers/inventoryRouter.js");
+const usersRouter = require("../config/routers/usersRouter.js");
+const locationsRouter = require("../config/routers/locationsRouter.js");
+const userAccountsRouter = require("../config/routers/userAccountsRouter.js");
+const volunteersRouter = require("../config/routers/volunteersRouter.js");
 
-const server = express()
+const server = express();
 
+server.use(helmet());
+server.use(cors());
+server.use(express.json());
 
-server.use(helmet())
-server.use(cors())
-server.use(express.json())
+server.get("/", (req, res) => {
+	res.status(200).send("Server alive");
+});
 
-server.use('/api/users', UserRouter)
-server.use('/api/auth', AuthRouter)
-server.use('/api/inventory', InvRouter)
-server.use('/api/kitchens', KitRouter)
-server.use('/api/units', UnitRouter)
+server.use("/api/inventory", inventoryRouter);
+server.use("/api/users", usersRouter);
+server.use("/api/locations", locationsRouter);
+server.use("/api/useraccounts", userAccountsRouter);
+server.use("/api/volunteers", volunteersRouter);
 
-server.get('/', (req, res) => {
-	res.send('Server Running')
-})
-
-module.exports = server
+module.exports = server;

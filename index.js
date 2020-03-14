@@ -1,13 +1,9 @@
-/* --------------------------- Load .env variables -------------------------- */
-require('dotenv').config()
+require("dotenv").config();
 
-/* ------------------------------ Import server ----------------------------- */
-const server = require('./api/server.js')
+const server = require("./api/server.js");
 
-//PORT is either the port provided by Heroku via process.env or 4949.
-const port = process.env.PORT || 4949
+const port = process.env.PORT || 5000;
 
-/* ----------------------------- Start listining ---------------------------- */
 server.listen(port, () => {
-	console.log(`Serving Soup On Port ${port}`)
-})
+	console.log(`\n=== Server listening on port ${port}\n`);
+});
